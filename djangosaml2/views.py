@@ -163,7 +163,7 @@ def login(request,
 
     logger.debug('Saving the session_id in the OutstandingQueries cache')
     oq_cache = OutstandingQueriesCache(request.session)
-    oq_cache.set(session_id, came_from)
+    oq_cache.set(session_id, unicode(came_from))
 
     logger.debug('Redirecting user to the IdP via %s binding.', binding.split(':')[-1])
     if binding == BINDING_HTTP_REDIRECT:
