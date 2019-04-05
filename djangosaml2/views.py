@@ -34,6 +34,8 @@ from django.http import HttpResponseServerError  # 50x
 from django.views.decorators.http import require_POST
 from django.shortcuts import render
 from django.template import TemplateDoesNotExist
+from django.urls import reverse
+
 try:
     from django.views.decorators.csrf import csrf_exempt
 except ImportError:
@@ -91,7 +93,7 @@ def login(request,
     """
     logger.debug('Login process started')
 
-    came_from = request.GET.get('next', settings.LOGIN_REDIRECT_URL)
+    came_from = request.GET.get('next', reverse(settings.LOGIN_REDIRECT_URL))
     if not came_from:
         logger.warning('The next parameter exists but is empty')
         came_from = settings.LOGIN_REDIRECT_URL
