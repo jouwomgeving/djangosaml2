@@ -96,7 +96,7 @@ def login(request,
     came_from = request.GET.get('next', reverse(settings.LOGIN_REDIRECT_URL))
     if not came_from:
         logger.warning('The next parameter exists but is empty')
-        came_from = settings.LOGIN_REDIRECT_URL
+        came_from = reverse(settings.LOGIN_REDIRECT_URL)
 
     # if the user is already authenticated that maybe because of two reasons:
     # A) He has this URL in two browser windows and in the other one he
@@ -257,7 +257,7 @@ def assertion_consumer_service(request,
 
     # redirect the user to the view where he came from
     default_relay_state = get_custom_setting('ACS_DEFAULT_REDIRECT_URL',
-                                             settings.LOGIN_REDIRECT_URL)
+                                             reverse(settings.LOGIN_REDIRECT_URL))
     if request.GET.get('next', None):
         default_relay_state = request.build_absolute_uri(request.GET.get('next'))
 
@@ -266,6 +266,9 @@ def assertion_consumer_service(request,
         logger.warning('The RelayState parameter exists but is empty')
         relay_state = default_relay_state
     logger.debug('Redirecting to the RelayState: %s', relay_state)
+
+    request.session['loggedin_via_sso'] = True
+
     return HttpResponseRedirect(relay_state)
 
 
